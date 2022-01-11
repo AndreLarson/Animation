@@ -79,42 +79,42 @@ class Player {
         this.height = 52 * this.scale;
 
         // movement physics
-        if (this.game.up && this.game.right) {
-            this.facing = 3;
-            this.action = 1;
-            this.width = 46 * this.scale;
-            this.velocity.x += MAX_WALK / Math.sqrt(2);
-            this.velocity.y -= MAX_WALK / Math.sqrt(2);
-        } else if (this.game.up && this.game.left) {
-            this.facing = 2;
-            this.action = 1;
-            this.width = 46 * this.scale;
-            this.velocity.x -= MAX_WALK / Math.sqrt(2);
-            this.velocity.y -= MAX_WALK / Math.sqrt(2);
-            this.offsetx = 18 * this.scale;
-        } else if (this.game.down && this.game.right) {
-            this.facing = 3;
-            this.action = 1;
-            this.width = 46 * this.scale;
-            this.velocity.x += MAX_WALK / Math.sqrt(2);
-            this.velocity.y += MAX_WALK / Math.sqrt(2);
-        } else if (this.game.down && this.game.left) {
-            this.facing = 2;
-            this.action = 1;
-            this.width = 46 * this.scale;
-            this.velocity.x -= MAX_WALK / Math.sqrt(2);
-            this.velocity.y += MAX_WALK / Math.sqrt(2);
-            this.offsetx = 18 * this.scale;
-        } else if (this.game.up) {
+        if (this.game.up) {
             this.facing = 0;
             this.action = 1;
-            this.velocity.y -= MAX_WALK;
-            this.offsety = 2 * this.scale;
+            if (this.game.left) {
+                this.facing = 2;
+                this.width = 46 * this.scale;
+                this.velocity.x -= MAX_WALK / Math.sqrt(2);
+                this.velocity.y -= MAX_WALK / Math.sqrt(2);
+                this.offsetx = 18 * this.scale;
+            } else if (this.game.right) {
+                this.facing = 3;
+                this.width = 46 * this.scale;
+                this.velocity.x += MAX_WALK / Math.sqrt(2);
+                this.velocity.y -= MAX_WALK / Math.sqrt(2);
+            } else {
+                this.velocity.y -= MAX_WALK;
+                this.offsety = 2 * this.scale;
+            }
         } else if (this.game.down) {
             this.facing = 1;
             this.action = 1;
-            this.velocity.y += MAX_WALK;
-            this.offsety = -3 * this.scale;
+            if (this.game.left) {
+                this.facing = 2;
+                this.width = 46 * this.scale;
+                this.velocity.x -= MAX_WALK / Math.sqrt(2);
+                this.velocity.y += MAX_WALK / Math.sqrt(2);
+                this.offsetx = 18 * this.scale;
+            } else if (this.game.right) {
+                this.facing = 3;
+                this.width = 46 * this.scale;
+                this.velocity.x += MAX_WALK / Math.sqrt(2);
+                this.velocity.y += MAX_WALK / Math.sqrt(2);
+            } else {
+                this.velocity.y += MAX_WALK;
+                this.offsety = -3 * this.scale;
+            }
         } else if (this.game.left) {
             this.facing = 2;
             this.action = 1;
