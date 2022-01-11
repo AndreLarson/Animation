@@ -180,37 +180,41 @@ class Player {
         if (this.velocity.x >= MAX_WALK) this.velocity.x = MAX_WALK;
         this.x += this.velocity.x * TICK;
         this.y += this.velocity.y * TICK;
+        if (this.x - this.offsetx <= 0 && this.action != 2) this.x = 0 + this.offsetx;
+        if (this.x - this.offsetx + this.width >= PARAMS.CANVAS_WIDTH && this.action != 2) this.x = PARAMS.CANVAS_WIDTH - this.width + this.offsetx;
+        if (this.y - this.offsety <= 0 && this.action != 2) this.y = 0 + this.offsety;
+        if (this.y - this.offsety + this.height >= PARAMS.CANVAS_HEIGHT && this.action != 2) this.y = PARAMS.CANVAS_HEIGHT - this.height + this.offsety;
         this.updateBB();
 
-        var that = this;
-        this.game.entities.forEach(function (entity) {
-            if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Ceiling) {
-                    if (that.BB.top <= entity.BB.bottom && that.action == 1) {
-                        that.y = entity.BB.bottom + that.offsety;
-                    }
-                    that.updateBB();
-                }
-                if (entity instanceof Floor) {
-                    if (that.BB.bottom >= entity.BB.top && that.action == 1) {
-                        that.y = entity.BB.top - that.height + that.offsety;
-                    }
-                    that.updateBB();
-                }
-                if (entity instanceof WallLeft) {
-                    if (that.BB.left <= entity.BB.right && that.action == 1) {
-                        that.x = entity.BB.right + that.offsetx;
-                    }
-                    that.updateBB();
-                }
-                if (entity instanceof WallRight) {
-                    if (that.BB.right >= entity.BB.left && that.action == 1) {
-                        that.x = entity.BB.left - that.width + that.offsetx;
-                    }
-                    that.updateBB();
-                }
-            }
-        });
+        // var that = this;
+        // this.game.entities.forEach(function (entity) {
+        //     if (entity.BB && that.BB.collide(entity.BB)) {
+        //         if (entity instanceof Ceiling) {
+        //             if (that.BB.top <= entity.BB.bottom && that.action == 1) {
+        //                 that.y = entity.BB.bottom + that.offsety;
+        //             }
+        //             that.updateBB();
+        //         }
+        //         if (entity instanceof Floor) {
+        //             if (that.BB.bottom >= entity.BB.top && that.action == 1) {
+        //                 that.y = entity.BB.top - that.height + that.offsety;
+        //             }
+        //             that.updateBB();
+        //         }
+        //         if (entity instanceof WallLeft) {
+        //             if (that.BB.left <= entity.BB.right && that.action == 1) {
+        //                 that.x = entity.BB.right + that.offsetx;
+        //             }
+        //             that.updateBB();
+        //         }
+        //         if (entity instanceof WallRight) {
+        //             if (that.BB.right >= entity.BB.left && that.action == 1) {
+        //                 that.x = entity.BB.left - that.width + that.offsetx;
+        //             }
+        //             that.updateBB();
+        //         }
+        //     }
+        // });
     };
 
     draw(ctx) {
