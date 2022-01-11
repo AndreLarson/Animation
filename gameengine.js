@@ -77,7 +77,7 @@ class GameEngine {
                 case "KeyW":
                     that.up = true;
                     break;
-                case "KeyQ":
+                case "Space":
                     that.attack = true;
                     break;
             }
@@ -96,9 +96,6 @@ class GameEngine {
                     break;
                 case "KeyW":
                     that.up = false;
-                    break;
-                case "KeyQ":
-                    that.attack = false;
                     break;
             }
         }, false);
@@ -150,6 +147,7 @@ class GameEngine {
         for (let i = this.entities.length - 1; i >= 0; i--) {
             this.entities[i].draw(this.ctx, this);
         }
+        this.camera.draw();
     };
 
     update() {
@@ -158,7 +156,7 @@ class GameEngine {
 
         // Remove dead things
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-
+        this.camera.update();
         // Add new things
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];

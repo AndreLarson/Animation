@@ -14,6 +14,14 @@ class Animator {
             if (this.loop) {
                 this.elapsedTime -= this.totalTime;
             } else {
+                // draws the last frame to prevent flashing after an attack
+                ctx.drawImage(this.spritesheet,
+                    this.xStart + this.lastFrame() * (this.width + this.framePadding), this.yStart, //source from sheet
+                    this.width, this.height,
+                    x, y,
+                    this.width * scale,
+                    this.height * scale);
+                ctx.strokeStyle = "Black";
                 return;
             }
         }
@@ -29,6 +37,10 @@ class Animator {
             this.height * scale);
         ctx.strokeStyle = "Black";
     };
+
+    lastFrame() {
+        return this.currentFrame() - 1;
+    }
 
     currentFrame() {
         return Math.floor(this.elapsedTime / this.frameDuration);
