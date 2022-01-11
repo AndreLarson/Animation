@@ -186,25 +186,25 @@ class Player {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Ceiling) {
-                    if (that.BB.top <= entity.BB.bottom) {
+                    if (that.BB.top <= entity.BB.bottom && that.action == 1) {
                         that.y = entity.BB.bottom + that.offsety;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof Floor) {
-                    if (that.BB.bottom >= entity.BB.top) {
+                    if (that.BB.bottom >= entity.BB.top && that.action == 1) {
                         that.y = entity.BB.top - that.height + that.offsety;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof WallLeft) {
-                    if (that.BB.left <= entity.BB.right) {
+                    if (that.BB.left <= entity.BB.right && that.action == 1) {
                         that.x = entity.BB.right + that.offsetx;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof WallRight) {
-                    if (that.BB.right >= entity.BB.left) {
+                    if (that.BB.right >= entity.BB.left && that.action == 1) {
                         that.x = entity.BB.left - that.width + that.offsetx;
                     }
                     that.updateBB();
