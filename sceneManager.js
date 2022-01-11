@@ -7,10 +7,11 @@ class SceneManager {
 
     load() {
         this.game.addEntity(new Player(this.game));
-        this.game.addEntity(new Ceiling());
-        this.game.addEntity(new Floor());
-        this.game.addEntity(new WallLeft());
-        this.game.addEntity(new WallRight());
+        this.game.addEntity(new Knight(this.game));
+        // this.game.addEntity(new Ceiling());
+        // this.game.addEntity(new Floor());
+        // this.game.addEntity(new WallLeft());
+        // this.game.addEntity(new WallRight());
     };
 
     update() {

@@ -17,25 +17,27 @@ class Player {
         this.spritesheetattackDown = ASSET_MANAGER.getAsset("./sprites/attackDown.png");
         this.spritesheetattackLeft = ASSET_MANAGER.getAsset("./sprites/attackLeft.png");
         this.spritesheetattackRight = ASSET_MANAGER.getAsset("./sprites/attackRight.png");
+
         this.spritesheetIdle = ASSET_MANAGER.getAsset("./sprites/idle.png");
     };
 
     loadPlayerProperties() {
         this.scale = 2.5;
-        this.x = 100;
-        this.y = 300;
+        this.x = 100; // initial x position
+        this.y = 300; // initial y position
+        // offset x and y needed for seamless animation transitions
         this.offsetx = 0;
         this.offsety = 0;
         this.facing = 1; // up, down, left, right
         this.action = 0; // idle, walking, attacks
-        this.velocity = { x: 0, y: 0 };
-        this.attackSpeed = 0.07;
+        this.velocity = { x: 0, y: 0 }; // initial x and y velocities
+        this.attackSpeed = 0.07; // initial attack speed
         this.width = 38 * this.scale;
         this.height = 52 * this.scale;
     };
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new BoundingBox(this.x - this.offsetx, this.y - this.offsety, this.width, this.height);
     };
 
     loadAnimations() {
@@ -82,46 +84,46 @@ class Player {
         if (this.game.up) {
             this.facing = 0;
             this.action = 1;
-            if (this.game.left) {
+            if (this.game.left) { // up and left input
                 this.facing = 2;
                 this.width = 46 * this.scale;
                 this.velocity.x -= MAX_WALK / Math.sqrt(2);
                 this.velocity.y -= MAX_WALK / Math.sqrt(2);
                 this.offsetx = 18 * this.scale;
-            } else if (this.game.right) {
+            } else if (this.game.right) { // up and right input
                 this.facing = 3;
                 this.width = 46 * this.scale;
                 this.velocity.x += MAX_WALK / Math.sqrt(2);
                 this.velocity.y -= MAX_WALK / Math.sqrt(2);
-            } else {
+            } else { // only up input
                 this.velocity.y -= MAX_WALK;
                 this.offsety = 2 * this.scale;
             }
         } else if (this.game.down) {
             this.facing = 1;
             this.action = 1;
-            if (this.game.left) {
+            if (this.game.left) { // down and left input
                 this.facing = 2;
                 this.width = 46 * this.scale;
                 this.velocity.x -= MAX_WALK / Math.sqrt(2);
                 this.velocity.y += MAX_WALK / Math.sqrt(2);
                 this.offsetx = 18 * this.scale;
-            } else if (this.game.right) {
+            } else if (this.game.right) { // down and right input
                 this.facing = 3;
                 this.width = 46 * this.scale;
                 this.velocity.x += MAX_WALK / Math.sqrt(2);
                 this.velocity.y += MAX_WALK / Math.sqrt(2);
-            } else {
+            } else { // only down input
                 this.velocity.y += MAX_WALK;
                 this.offsety = -3 * this.scale;
             }
-        } else if (this.game.left) {
+        } else if (this.game.left) { // left input
             this.facing = 2;
             this.action = 1;
             this.width = 46 * this.scale;
             this.velocity.x -= MAX_WALK;
             this.offsetx = 19 * this.scale;
-        } else if (this.game.right) {
+        } else if (this.game.right) { // right input
             this.facing = 3;
             this.action = 1;
             this.width = 46 * this.scale;
@@ -156,7 +158,7 @@ class Player {
                     this.offsety = -2 * this.scale;
                     this.height = 52 * this.scale;
                 }
-                this.width = 108 * this.scale;
+                this.width = 108 * this.scale; // all attacks have around the same width
             }
         } else {
             // reset the attack animation
@@ -180,48 +182,32 @@ class Player {
         if (this.velocity.x >= MAX_WALK) this.velocity.x = MAX_WALK;
         this.x += this.velocity.x * TICK;
         this.y += this.velocity.y * TICK;
+        // make sure player stays in canvas kind of
         if (this.x - this.offsetx <= 0 && this.action != 2) this.x = 0 + this.offsetx;
         if (this.x - this.offsetx + this.width >= PARAMS.CANVAS_WIDTH && this.action != 2) this.x = PARAMS.CANVAS_WIDTH - this.width + this.offsetx;
         if (this.y - this.offsety <= 0 && this.action != 2) this.y = 0 + this.offsety;
         if (this.y - this.offsety + this.height >= PARAMS.CANVAS_HEIGHT && this.action != 2) this.y = PARAMS.CANVAS_HEIGHT - this.height + this.offsety;
         this.updateBB();
 
-        // var that = this;
-        // this.game.entities.forEach(function (entity) {
-        //     if (entity.BB && that.BB.collide(entity.BB)) {
-        //         if (entity instanceof Ceiling) {
-        //             if (that.BB.top <= entity.BB.bottom && that.action == 1) {
-        //                 that.y = entity.BB.bottom + that.offsety;
-        //             }
-        //             that.updateBB();
-        //         }
-        //         if (entity instanceof Floor) {
-        //             if (that.BB.bottom >= entity.BB.top && that.action == 1) {
-        //                 that.y = entity.BB.top - that.height + that.offsety;
-        //             }
-        //             that.updateBB();
-        //         }
-        //         if (entity instanceof WallLeft) {
-        //             if (that.BB.left <= entity.BB.right && that.action == 1) {
-        //                 that.x = entity.BB.right + that.offsetx;
-        //             }
-        //             that.updateBB();
-        //         }
-        //         if (entity instanceof WallRight) {
-        //             if (that.BB.right >= entity.BB.left && that.action == 1) {
-        //                 that.x = entity.BB.left - that.width + that.offsetx;
-        //             }
-        //             that.updateBB();
-        //         }
-        //     }
-        // });
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (entity instanceof Knight) {
+                    console.log('1');
+                    if (that.action == 2) {
+                        entity.dead = true;
+                    }
+                    that.updateBB();
+                }
+            }
+        });
     };
 
     draw(ctx) {
         this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.offsetx, this.y - this.offsety, this.scale);
         // draw bounding box
         ctx.strokeStyle = 'Red';
-        ctx.strokeRect(this.BB.x - this.offsetx, this.BB.y - this.offsety, this.BB.width, this.BB.height);
+        ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
     };
 
 }
