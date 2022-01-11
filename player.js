@@ -187,7 +187,7 @@ class Player {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Ceiling) {
                     if (that.BB.top <= entity.BB.bottom) {
-                        that.y = entity.BB.bottom - that.offsety;
+                        that.y = entity.BB.bottom + that.offsety;
                     }
                     that.updateBB();
                 }
@@ -199,7 +199,7 @@ class Player {
                 }
                 if (entity instanceof WallLeft) {
                     if (that.BB.left <= entity.BB.right) {
-                        that.x = entity.BB.right - that.offsety;
+                        that.x = entity.BB.right + that.offsetx;
                     }
                     that.updateBB();
                 }
