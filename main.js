@@ -17,7 +17,6 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	PARAMS.BLOCKWIDTH = PARAMS.BITWIDTH * PARAMS.SCALE;
 	PARAMS.CANVAS_WIDTH = canvas.width;
-	console.log(PARAMS.CANVAS_WIDTH);
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 	ctx.imageSmoothingEnabled = false;
 	ctx.font = PARAMS.BLOCKWIDTH / 2 + 'px "Press Start 2P"';

@@ -187,25 +187,25 @@ class Player {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Ceiling) {
                     if (that.BB.top <= entity.BB.bottom) {
-                        that.y = entity.BB.bottom;
+                        that.y = entity.BB.bottom - that.offsety;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof Floor) {
                     if (that.BB.bottom >= entity.BB.top) {
-                        that.y = entity.BB.top - that.height;
+                        that.y = entity.BB.top - that.height + that.offsety;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof WallLeft) {
                     if (that.BB.left <= entity.BB.right) {
-                        that.x = entity.BB.right;
+                        that.x = entity.BB.right - that.offsety;
                     }
                     that.updateBB();
                 }
                 if (entity instanceof WallRight) {
                     if (that.BB.right >= entity.BB.left) {
-                        that.x = entity.BB.left - that.width;
+                        that.x = entity.BB.left - that.width + that.offsetx;
                     }
                     that.updateBB();
                 }
