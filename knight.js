@@ -21,10 +21,10 @@ class Knight {
     };
 
     update() {
-        if (this.dead) {
-            this.deadCounter += this.game.clockTick;
-            if (this.deadCounter > 1.2) this.removeFromWorld = true;
-        }
+        // if (this.dead) {
+        //     this.deadCounter += this.game.clockTick;
+        //     if (this.deadCounter > 1.2) this.removeFromWorld = true;
+        // }
     };
 
     draw(ctx) {

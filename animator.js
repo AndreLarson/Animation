@@ -39,7 +39,7 @@ class Animator {
     };
 
     lastFrame() {
-        return this.currentFrame() - 1;
+        return this.frameCount - 1;
     }
 
     currentFrame() {
