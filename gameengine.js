@@ -139,6 +139,19 @@ class GameEngine {
         this.entitiesToAdd.push(entity);
     };
 
+    swapEntity(entity1, entity2) {
+        var a = this.entities.indexOf(entity1);
+        var b = this.entities.indexOf(entity2);
+        this.entities[a] = entity2;
+        this.entities[b] = entity1;
+    };
+
+    isBehind(entity1, entity2) {
+        var a = this.entities.indexOf(entity1);
+        var b = this.entities.indexOf(entity2);
+        return a < b;
+    };
+
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);

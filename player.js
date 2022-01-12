@@ -193,7 +193,10 @@ class Player {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Knight) {
-                    console.log('1');
+                    if ((that.BB.bottom < entity.BB.bottom && that.game.isBehind(that, entity)) ||
+                        (that.BB.bottom >= entity.BB.bottom && !that.game.isBehind(that, entity))) {
+                        that.game.swapEntity(that, entity);
+                    }
                     if (that.action == 2) {
                         entity.dead = true;
                     }
