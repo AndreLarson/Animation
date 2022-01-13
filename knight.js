@@ -14,7 +14,13 @@ class Knight {
         this.height = 49 * this.scale;
         this.dead = false;
         this.deadCounter = 0;
+        this.health = 100;
         this.updateBB();
+    };
+
+    damageInput(damage) {
+        this.health -= damage;
+        if (this.health <= 0) this.dead = true;
     };
 
     updateBB() {

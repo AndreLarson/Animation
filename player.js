@@ -23,17 +23,18 @@ class Player {
 
     loadPlayerProperties() {
         this.scale = 2.5;
-        this.x = 100; // initial x position
-        this.y = 300; // initial y position
-        // offset x and y needed for seamless animation transitions
+        this.velocity = { x: 0, y: 0 };
+        this.x = 100;
+        this.y = 300;
         this.offsetx = 0;
         this.offsety = 0;
-        this.facing = 1; // up, down, left, right
-        this.action = 0; // idle, walking, attacks
-        this.velocity = { x: 0, y: 0 }; // initial x and y velocities
-        this.attackSpeed = 0.07; // initial attack speed
         this.width = 38 * this.scale;
         this.height = 52 * this.scale;
+        this.facing = 1; // up, down, left, right
+        this.action = 0; // idle, walking, attacks
+        this.attackSpeed = 0.07;
+        this.attackDamage = 50;
+        this.canAttack = true;
     };
 
     updateBB() {
@@ -64,7 +65,6 @@ class Player {
         this.animations[3][0] = new Animator(this.spritesheetIdle, 19, 192, 38, 54, 1, 0.33, 0, false, true); // idle
         this.animations[3][1] = new Animator(this.spritesheetwalkRight, 0, 0 , 64, 53, 8, 0.2, 0, false, true); // walk
         this.animations[3][2] = new Animator(this.spritesheetattackRight, 0, 0, 108, 52, 6, this.attackSpeed, 84, false, false); // attack
-
     };
 
     update() {
@@ -138,25 +138,31 @@ class Player {
             if (this.animations[this.facing][this.action].isDone()) {
                 // set action to idle once attack animation is finished
                 this.action = 0;
+                this.canAttack = true;
                 this.game.attack = false; // this allows for press to attack
             } else {
-                // set offset and adjust bounding box for attack actions
-                if (this.facing == 0) {
-                    this.offsetx = 27 * this.scale;
-                    this.offsety = 15 * this.scale;
-                    this.height = 70 * this.scale;
-                } else if (this.facing == 1) {
-                    this.offsetx = 32 * this.scale;
-                    this.offsety = -3 * this.scale;
-                    this.height = 70 * this.scale;
-                } else if (this.facing == 2) {
-                    this.offsetx = 61 * this.scale;
-                    this.offsety = -3 * this.scale;
-                    this.height = 52 * this.scale;
-                } else if (this.facing == 3) {
-                    this.offsetx = 21 * this.scale;
-                    this.offsety = -2 * this.scale;
-                    this.height = 52 * this.scale;
+                // set offset and adjust bounding box for attacks
+                switch (this.facing) {
+                    case 0:
+                        this.offsetx = 27 * this.scale;
+                        this.offsety = 15 * this.scale;
+                        this.height = 70 * this.scale;
+                        break;
+                    case 1:
+                        this.offsetx = 32 * this.scale;
+                        this.offsety = -3 * this.scale;
+                        this.height = 70 * this.scale;
+                        break;
+                    case 2:
+                        this.offsetx = 61 * this.scale;
+                        this.offsety = -3 * this.scale;
+                        this.height = 52 * this.scale;
+                        break;
+                    case 3:
+                        this.offsetx = 21 * this.scale;
+                        this.offsety = -2 * this.scale;
+                        this.height = 52 * this.scale;
+                        break;
                 }
                 this.width = 108 * this.scale; // all attacks have around the same width
             }
@@ -183,10 +189,12 @@ class Player {
         this.x += this.velocity.x * TICK;
         this.y += this.velocity.y * TICK;
         // make sure player stays in canvas kind of
-        if (this.x - this.offsetx <= 0 && this.action != 2) this.x = 0 + this.offsetx;
-        if (this.x - this.offsetx + this.width >= PARAMS.CANVAS_WIDTH && this.action != 2) this.x = PARAMS.CANVAS_WIDTH - this.width + this.offsetx;
-        if (this.y - this.offsety <= 0 && this.action != 2) this.y = 0 + this.offsety;
-        if (this.y - this.offsety + this.height >= PARAMS.CANVAS_HEIGHT && this.action != 2) this.y = PARAMS.CANVAS_HEIGHT - this.height + this.offsety;
+        if (this.action != 2) {
+            if (this.x - this.offsetx <= 0) this.x = 0 + this.offsetx;
+            if (this.x - this.offsetx + this.width >= PARAMS.CANVAS_WIDTH) this.x = PARAMS.CANVAS_WIDTH - this.width + this.offsetx;
+            if (this.y - this.offsety <= 0) this.y = 0 + this.offsety;
+            if (this.y - this.offsety + this.height >= PARAMS.CANVAS_HEIGHT) this.y = PARAMS.CANVAS_HEIGHT - this.height + this.offsety;
+        }
         this.updateBB();
 
         var that = this;
@@ -197,13 +205,14 @@ class Player {
                         (that.BB.bottom >= entity.BB.bottom && !that.game.isBehind(that, entity))) {
                         that.game.swapEntity(that, entity);
                     }
-                    if (that.action == 2) {
-                        entity.dead = true;
+                    if (that.action == 2 && that.canAttack) {
+                        entity.damageInput(that.attackDamage);
                     }
                     that.updateBB();
                 }
             }
         });
+        if (this.action == 2) this.canAttack = false;
     };
 
     draw(ctx) {
